@@ -25,10 +25,10 @@ function show_one_product(req,res){
 }
 
 function update_product(req,res){
-    const {id} = req.params
-    const {name, price, description, categoryid} = req.body
+    const {id} = req.body
+    const {name, price, description, categoryId} = req.body
     let product = Product.update(
-        {name, price, description, categoryid},
+        {name, price, description, categoryId},
         
         {
         where:{id},
@@ -42,13 +42,13 @@ function update_product(req,res){
 }
 
 function create_product(req,res){
-  const { id } = req.params;
+  
   const { name, description, price, categoryId } = req.body;
   let product = Product.create(
 
   { name, description, price, categoryId },
-  {where:{id},
-  include:Category}) 
+  {include:Category}) 
+  
   .then((prod)=>{
    res.json(prod)}).catch((err)=>{
        res.status(500).json({eror:err.message})
@@ -56,7 +56,7 @@ function create_product(req,res){
 }
 
 function delete_product (req, res) {
-    const { id } = req.params;
+    const { id } = req.body;
     let product =  Product.destroy(
         { where: { id } })
         .then((prod)=>{

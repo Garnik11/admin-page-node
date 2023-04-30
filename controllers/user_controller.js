@@ -32,7 +32,7 @@ async function user_login(req, res) {
     const validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
       const token = generateAccessToken(username, user.id,user.role);
-      res.send(JSON.stringify({ status: "Logged in", jwt: token }));
+      res.send(JSON.stringify({ status: "Logged in", jwt: token, user }));
     }else {
         return res.status(400).send("Invalid password");
       }

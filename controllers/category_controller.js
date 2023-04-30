@@ -35,7 +35,8 @@ function show_one_category(req,res){
 }
 
 function update_Category(req, res) {
-    const { name,id} = req.body
+    
+    const {name, id} = req.body
     Category.update(
         { name },
         {
@@ -50,17 +51,25 @@ function update_Category(req, res) {
 
 }
 
-function delete_Category(req,res){
-    const { id } = req.params;
-    Category.destroy(
-            { where: { id } })
-            .then((cat) => {
-                res.json({ status: 'deleted' })
-            }).catch((err) => {
-                res.status(500).json({ eror: err.message })
-            })
+async function delete_Category(req,res){
+    const { id } = req.body;
     
+    try {
+        const category = await Category.findOne({
+            where: { id },
+            include: Product
+        });
+        
+        if (category.Products.length > 0) {
+            res.status(400).json({ message: 'Cannot delete category that has products' });
+        } else {
+            await Category.destroy({ where: { id } });
+            res.json({ message: 'Category deleted' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
+}
 
 
 
